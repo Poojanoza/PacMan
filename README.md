@@ -1,6 +1,3 @@
-Sure! Here's a basic `README.md` file template for your Pac-Man game project that you can use for GitHub:
-
----
 
 # Pac-Man Game in Python with Pygame
 
