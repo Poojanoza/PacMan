@@ -71,7 +71,7 @@ In Hard mode:
 
 ## Screenshots
 ### Level Selection Screen
-![Level Selection](images/screenshot1.png)
+![Level Selection](images/Screenshot_1.png)
 
 ### Easy Mode Gameplay
 ![Easy Mode](images/screenshot2.png)
