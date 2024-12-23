@@ -1,6 +1,3 @@
-#Pacman in Python with PyGame
-#https://github.com/hbokmann/Pacman
-  
 import pygame
 import sys
 pygame.init()
@@ -11,6 +8,8 @@ def bfs_pathfinding(start, end, walls):
     queue = deque([(start, [])])  # Queue of positions and their paths
     visited = set()  # To keep track of visited positions
     directions = [(-30, 0), (30, 0), (0, -30), (0, 30)]  # Left, Right, Up, Down
+    # for speed control
+    # directions = [(-15, 0), (15, 0), (0, -15), (0, 15)]  # 15 pixels per step
 
     while queue:
         current_pos, path = queue.popleft()
@@ -57,9 +56,26 @@ def draw_text(text, font, color, surface, x, y):
 def show_level_select():
     while True:
         screen.fill(black)
+        # Define button rectangles
+        easy_rect = pygame.Rect(screen_width // 2 - 150, 180, 300, 50)
+        hard_rect = pygame.Rect(screen_width // 2 - 150, 280, 300, 50)
+
+        # Get mouse position
+        mouse_pos = pygame.mouse.get_pos()
+
+        # Check for hover and change color
+        easy_color = green if easy_rect.collidepoint(mouse_pos) else white
+        hard_color = red if hard_rect.collidepoint(mouse_pos) else white
+
+        # Draw buttons
+        pygame.draw.rect(screen, easy_color, easy_rect)
+        pygame.draw.rect(screen, hard_color, hard_rect)
+
+        # Add text to buttons
+        draw_text("Easy Mode", font, black, screen, screen_width // 2, 205)
+        draw_text("Hard Mode", font, black, screen, screen_width // 2, 305)
+
         draw_text("Select Level", font, white, screen, screen_width // 2, 100)
-        draw_text("Press 1 for Easy", font, white, screen, screen_width // 2, 200)
-        draw_text("Press 2 for Hard", font, white, screen, screen_width // 2, 300)
         draw_text("Press Esc to Exit", font, white, screen, screen_width // 2, 400)
 
         pygame.display.flip()
@@ -69,13 +85,16 @@ def show_level_select():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_1:
-                    return "easy"
-                elif event.key == pygame.K_2:
-                    return "hard"
-                elif event.key == pygame.K_ESCAPE:
+                if event.key == pygame.K_ESCAPE:
                     pygame.quit()
-                    sys.exit()  
+                    sys.exit()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:  # Left mouse button
+                    if easy_rect.collidepoint(mouse_pos):
+                        return "easy"
+                    elif hard_rect.collidepoint(mouse_pos):
+                        return "hard"
+
 black = (0,0,0)
 white = (255,255,255)
 blue = (0,0,255)
@@ -476,7 +495,7 @@ def startGame(level):
 
 
     # Create the player paddle object
-    Pacman = Player( w, p_h, "images/Trollman.png" )
+    Pacman = Player( w, p_h, "images/pacman.png" )
     all_sprites_list.add(Pacman)
     pacman_collide.add(Pacman)
     
@@ -641,14 +660,14 @@ def startGame(level):
         monsta_list.add(Pinky)
         all_sprites_list.add(Pinky)
 
-        Inky = Ghost(i_w, m_h, "images/Inky.png")
-        monsta_list.add(Inky)
-        all_sprites_list.add(Inky)
+        # Inky = Ghost(i_w, m_h, "images/Inky.png")
+        # monsta_list.add(Inky)
+        # all_sprites_list.add(Inky)
 
-        Clyde = Ghost(c_w, m_h, "images/Clyde.png")
-        monsta_list.add(Clyde)
-        all_sprites_list.add(Clyde)
-
+        # Clyde = Ghost(c_w, m_h, "images/Clyde.png")
+        # monsta_list.add(Clyde)
+        # all_sprites_list.add(Clyde)
+        
         # Draw the grid
         for row in range(19):
             for column in range(19):
@@ -711,7 +730,7 @@ def startGame(level):
 
             pacman_pos = (Pacman.rect.left, Pacman.rect.top)
 
-            for ghost in [Pinky, Blinky, Inky, Clyde]:
+            for ghost in [Pinky, Blinky,]:
                 ghost_pos = (ghost.rect.left, ghost.rect.top)
                 path = bfs_pathfinding(ghost_pos, pacman_pos, wall_list)
 
